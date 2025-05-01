@@ -42,7 +42,7 @@ The components of the code are as follows:
   
   This fact table powers the analytics dashboard.
 
-###SeasonGenerator.py
+### SeasonGenerator.py
   This script generates the Excel file that records up-to-date season statistics.
 
   Extraction
@@ -64,7 +64,7 @@ The components of the code are as follows:
   Loading
   An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets       are replaced with updated data to keep the file current.
 
-###WeekGenerator.py
+### WeekGenerator.py
   Generates a weekly Excel file capturing player performance for the current week.
   
   Purpose
@@ -101,7 +101,7 @@ The components of the code are as follows:
   
   If the file doesn’t exist, it is created.
 
-###DashboardCreator.py
+### DashboardCreator.py
   Generates a unified fact table for use in the dashboard.
   
   Purpose
