@@ -43,6 +43,3 @@ def WeeklyStats(week):
             pass
         except FileNotFoundError:
             df3.to_excel(f'C:\\Users\\miragn\\Python\\UFL\\WeekStats\\Week {week}.xlsx', sheet_name=page, index=False)
-
-if __name__ == "__main__":
-    pass
