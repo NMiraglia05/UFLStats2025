@@ -148,8 +148,3 @@ def SeasonStats():
         print(f'Page generated for {page}')
 
     driver.quit()
-
-if __name__=='main':
-    SeasonStats
-else:
-    pass
