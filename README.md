@@ -1,11 +1,13 @@
+
+
+# UFLStats2025
+Update repository for 2025 stats.
+
 ## How to Run
 
 1. Install required libraries:
    ```bash
-   pip install pandas selenium beautifulsoup4
-
-# UFLStats2025
-Update repository for 2025 stats.
+   pip install pandas selenium beautifulsoup4 webdriver
 
 This project consists of 2 general compoents: the code that generates statistical spreadsheets, and the dashboard that utilizes the spreadsheets.
 
