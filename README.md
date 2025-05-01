@@ -15,7 +15,7 @@ This project consists of 2 general compoents: the code that generates statistica
 
 The components of the code are as follows:
 
-###StatController.py
+### StatController.py
   This script serves as the central controller for the UFL stats pipeline. It coordinates the following key steps to ensure data is updated and archived correctly:
   
   📅 Week Determination
