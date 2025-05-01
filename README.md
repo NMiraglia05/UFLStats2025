@@ -87,27 +87,28 @@ The components of the code are as follows:
   
   2. Transformation
   
-  Cleaning
-  Uses a dropcolumns dictionary to remove columns irrelevant to weekly analysis (varies by stat type).
+           Cleaning
+           Uses a dropcolumns dictionary to remove columns irrelevant to weekly analysis (varies by stat type).
   
   Combining
-  Merges df1 and df2 using a left join on the "Name" column.
+  
+     Merges df1 and df2 using a left join on the "Name" column.
   
   Processing
   
-  Columns from df1 have _x; from df2, _y.
+     Columns from df1 have _x; from df2, _y.
   
-  Weekly stats = _x minus _y.
+     Weekly stats = _x minus _y.
   
-  Conditional logic is applied to compute category-specific averages.
+     Conditional logic is applied to compute category-specific averages.
   
   3. Loading
   
-  Writes the final df3 to a new Excel file named for the specific week.
+           Writes the final df3 to a new Excel file named for the specific week.
   
-  Uses ExcelWriter in append mode to avoid overwriting existing sheets.
+           Uses ExcelWriter in append mode to avoid overwriting existing sheets.
   
-  If the file doesn’t exist, it is created.
+           If the file doesn’t exist, it is created.
 
 ### DashboardCreator.py
   Generates a unified fact table for use in the dashboard.
@@ -117,12 +118,16 @@ The components of the code are as follows:
   
   Process Overview
   1. Extraction
-  Each page (e.g., Passing, Rushing, Receiving) from the SeasonStats.xlsx file is read using pandas.
+
+         Each page (e.g., Passing, Rushing, Receiving) from the SeasonStats.xlsx file is read using pandas.
   
-  2. Transformation
-  All columns are renamed with a prefix indicating their source page. For example, columns from the "Passing" sheet become passing_Yds, passing_TD, etc. This ensures clear traceability across combined datasets.
+  3. Transformation
   
-  3. Loading
-  Each transformed dataframe is added to a list (dashboard_df).
-  Once all sheets are processed, they are concatenated horizontally (axis=1), resulting in a single wide dataframe that merges stats across all categories.
-  The final dataframe is saved to Excel, overwriting any existing file.
+           All columns are renamed with a prefix indicating their source page. For example, columns from the "Passing" sheet become passing_Yds, passing_TD, etc. This ensures clear traceability across combined datasets.
+  
+  4. Loading
+  
+  
+           Each transformed dataframe is added to a list (dashboard_df).
+           Once all sheets are processed, they are concatenated horizontally (axis=1), resulting in a single wide dataframe that merges stats across all categories.
+           The final dataframe is saved to Excel, overwriting any existing file.
