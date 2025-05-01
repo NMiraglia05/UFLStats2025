@@ -19,25 +19,29 @@ The components of the code are as follows:
   This script serves as the central controller for the UFL stats pipeline. It coordinates the following key steps to ensure data is updated and archived correctly:
   
   📅 Week Determination
+  
      Uses weeknumber to identify the most recent completed UFL week.
-  
-  Designed to look backward in time, not forward.
-  
-  Recommended to run this script on Sunday evening after all games conclude.
-
-  If run later in the week, reduce the week number by 1 to reflect the correct game week.
+     
+     Designed to look backward in time, not forward.
+     
+     Recommended to run this script on Sunday evening after all games conclude.
+   
+     If run later in the week, reduce the week number by 1 to reflect the correct game week.
 
   📊 Stats Generation
+     
      SeasonStats: Updates the season-long stats spreadsheet with current cumulative performance data for each player.
      
      WeeklyStats: Creates a new spreadsheet for weekly performance based on the identified game week.
   
   🗂 Archiving
+     
      Uses shutil to create a copy of the season stats as an archive for the current week.
      
      Does not overwrite an existing weekly archive—consistency in run timing is important.
   
   📈 Dashboard Prep
+     
      Appends all worksheets from the season stats file into a single fact table.
      
      This fact table powers the analytics dashboard.
