@@ -21,26 +21,26 @@ The components of the code are as follows:
   📅 Week Determination
      Uses weeknumber to identify the most recent completed UFL week.
   
-     Designed to look backward in time, not forward.
-     
-     Recommended to run this script on Sunday evening after all games conclude.
+  Designed to look backward in time, not forward.
   
-     If run later in the week, reduce the week number by 1 to reflect the correct game week.
+  Recommended to run this script on Sunday evening after all games conclude.
+
+  If run later in the week, reduce the week number by 1 to reflect the correct game week.
+
+  📊 Stats Generation
+     SeasonStats: Updates the season-long stats spreadsheet with current cumulative performance data for each player.
+     
+     WeeklyStats: Creates a new spreadsheet for weekly performance based on the identified game week.
   
-     📊 Stats Generation
-        SeasonStats: Updates the season-long stats spreadsheet with current cumulative performance data for each player.
-        
-        WeeklyStats: Creates a new spreadsheet for weekly performance based on the identified game week.
+  🗂 Archiving
+     Uses shutil to create a copy of the season stats as an archive for the current week.
      
-     🗂 Archiving
-        Uses shutil to create a copy of the season stats as an archive for the current week.
-        
-        Does not overwrite an existing weekly archive—consistency in run timing is important.
+     Does not overwrite an existing weekly archive—consistency in run timing is important.
+  
+  📈 Dashboard Prep
+     Appends all worksheets from the season stats file into a single fact table.
      
-     📈 Dashboard Prep
-        Appends all worksheets from the season stats file into a single fact table.
-        
-        This fact table powers the analytics dashboard.
+     This fact table powers the analytics dashboard.
 
 ### SeasonGenerator.py
   This script generates the Excel file that records up-to-date season statistics.
