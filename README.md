@@ -9,11 +9,13 @@ Update repository for 2025 stats.
    ```bash
    pip install pandas selenium beautifulsoup4 webdriver
 
+## Explanation
+
 This project consists of 2 general compoents: the code that generates statistical spreadsheets, and the dashboard that utilizes the spreadsheets.
 
 The components of the code are as follows:
 
-StatController.py
+###StatController.py
   This script serves as the central controller for the UFL stats pipeline. It coordinates the following key steps to ensure data is updated and archived correctly:
   
   📅 Week Determination
@@ -40,7 +42,7 @@ StatController.py
   
   This fact table powers the analytics dashboard.
 
-SeasonGenerator.py
+###SeasonGenerator.py
   This script generates the Excel file that records up-to-date season statistics.
 
   Extraction
@@ -62,7 +64,7 @@ SeasonGenerator.py
   Loading
   An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets       are replaced with updated data to keep the file current.
 
-WeekGenerator.py
+###WeekGenerator.py
   Generates a weekly Excel file capturing player performance for the current week.
   
   Purpose
@@ -99,7 +101,7 @@ WeekGenerator.py
   
   If the file doesn’t exist, it is created.
 
-Dashboard Creator
+###DashboardCreator.py
   Generates a unified fact table for use in the dashboard.
   
   Purpose
