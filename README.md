@@ -51,22 +51,25 @@ The components of the code are as follows:
 
   Extraction
   
-  URL Creation:
-  Lists of pages and teams are used to dynamically generate the URLs to extract data from.
+     URL Creation:
   
-  Scraping:
-  Selenium and BeautifulSoup extract the stat tables from each webpage. For each stat category (passing, receiving, rushing, etc.), data is collected across all teams and combined into a single table per category. These       are stored in dataframes.
+     Lists of pages and teams are used to dynamically generate the URLs to extract data from.
+  
+     Scraping:
+  
+     Selenium and BeautifulSoup extract the stat tables from each webpage. For each stat category (passing, receiving, rushing, etc.), data is collected across all teams and combined into a single table per category. These       are stored in dataframes.
   
   Transformation
   
-  Cleaning:
-  Certain columns (e.g., FUM-Lst) contain dashes and are treated as strings. These are split into two columns (e.g., FUM and LST) to allow numeric operations. Similar logic applies to columns like C-A-I in the passing         page. Cleaning rules are applied conditionally based on the stat category.
-  
-  Type Conversion:
-  The script attempts to convert all columns to numeric types—integers when possible, floats otherwise—skipping over non-numeric columns like player names.
+     Cleaning:
+     Certain columns (e.g., FUM-Lst) contain dashes and are treated as strings. These are split into two columns (e.g., FUM and LST) to allow numeric operations. Similar logic applies to columns like C-A-I in the passing         page. Cleaning rules are applied conditionally based on the stat category.
+     
+     Type Conversion:
+     The script attempts to convert all columns to numeric types—integers when possible, floats otherwise—skipping over non-numeric columns like player names.
   
   Loading
-  An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets       are replaced with updated data to keep the file current.
+  
+     An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets       are replaced with updated data to keep the file current.
 
 ### WeekGenerator.py
   Generates a weekly Excel file capturing player performance for the current week.
@@ -77,9 +80,10 @@ The components of the code are as follows:
   Process Overview
   1. Extraction
   
-  df1: Pulled from the current SeasonStats.xlsx to get up-to-date cumulative stats.
-  
-  df2: Pulled from the archived SeasonStats file of the previous week.
+
+           df1: Pulled from the current SeasonStats.xlsx to get up-to-date cumulative stats.
+           
+           df2: Pulled from the archived SeasonStats file of the previous week.
   
   2. Transformation
   
