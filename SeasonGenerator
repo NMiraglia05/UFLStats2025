@@ -17,6 +17,7 @@ def SeasonStats():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--enable-unsafe-swiftshader")
     options.add_argument("--log-level=3")
+    options.add_argument('--ignore-certificate-errors')
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
@@ -75,76 +76,78 @@ def SeasonStats():
     statsurl = '/stats/individual?stats-category='
     all_results = []
 
-    for page in pages:
-        print(f'Starting process for {page}')
-        headers = []
-        for team in teams:
-            pageurl = baseurl + team + statsurl + page
-            headers = get_headers(pageurl)
+    with pd.ExcelWriter('C:\\Users\\miragn\\Python\\UFL\\SeasonStats.xlsx',mode='a',if_sheet_exists='replace') as writer:
+        for page in pages:
+            headers = []
+            for team in teams:
+                pageurl = baseurl + team + statsurl + page
+                headers = get_headers(pageurl)
 
-            try:
-                html_content = load_page(pageurl)
-                extracted_data = extract_data(html_content)
-                all_results.extend(extracted_data)
-            except Exception:
-                print(f'Failed to load {pageurl}')
+                try:
+                    html_content = load_page(pageurl)
+                    extracted_data = extract_data(html_content)
+                    all_results.extend(extracted_data)
+                except Exception:
+                    pass
 
-        df = pd.DataFrame(all_results, columns=headers)
-        if page in ['passing', 'rushing', 'receiving']:
-            split_cols = df['FUM-LST'].str.split('-', expand=True)
-            split_cols.columns = ['Fum', 'Lst']
-            df = pd.concat([df, split_cols], axis=1)
-            df.drop(columns='FUM-LST', inplace=True)
-            if page == 'passing':
-                split_cols = df['C-A-I'].str.split('-', expand=True)
-                split_cols.columns = ['C', 'A', 'I']
+            df = pd.DataFrame(all_results, columns=headers)
+            if page in ['passing', 'rushing', 'receiving']:
+                split_cols = df['FUM-LST'].str.split('-', expand=True)
+                split_cols.columns = ['Fum', 'Lst']
+                df = pd.concat([df, split_cols], axis=1)
+                df.drop(columns='FUM-LST', inplace=True)
+                if page == 'passing':
+                    split_cols = df['C-A-I'].str.split('-', expand=True)
+                    split_cols.columns = ['C', 'A', 'I']
+                    df = pd.concat([df, split_cols], axis=1)
+                    cols = df.columns.tolist()
+                    for col in ['C', 'A', 'I']:
+                        cols.remove(col)
+                    insert_at = cols.index('C-A-I') + 1
+                    for i, col in enumerate(['C', 'A', 'I']):
+                        cols.insert(insert_at + i, col)
+                    df = df[cols]
+                    df.drop(columns='C-A-I', inplace=True)
+
+            elif page == 'defense':
+                split_cols = df['TFL - Yds'].str.split('-', expand=True)
+                split_cols.columns = ['TFL', 'Yds(TFL)']
                 df = pd.concat([df, split_cols], axis=1)
                 cols = df.columns.tolist()
-                for col in ['C', 'A', 'I']:
+                for col in ['TFL', 'Yds(TFL)']:
                     cols.remove(col)
-                insert_at = cols.index('C-A-I') + 1
-                for i, col in enumerate(['C', 'A', 'I']):
+                insert_at = cols.index('TFL - Yds') + 1
+                for i, col in enumerate(['TFL', 'Yds(TFL)']):
                     cols.insert(insert_at + i, col)
                 df = df[cols]
-                df.drop(columns='C-A-I', inplace=True)
+                df.drop(columns='TFL - Yds', inplace=True)
 
-        elif page == 'defense':
-            split_cols = df['TFL - Yds'].str.split('-', expand=True)
-            split_cols.columns = ['TFL', 'Yds(TFL)']
-            df = pd.concat([df, split_cols], axis=1)
-            cols = df.columns.tolist()
-            for col in ['TFL', 'Yds(TFL)']:
-                cols.remove(col)
-            insert_at = cols.index('TFL - Yds') + 1
-            for i, col in enumerate(['TFL', 'Yds(TFL)']):
-                cols.insert(insert_at + i, col)
-            df = df[cols]
-            df.drop(columns='TFL - Yds', inplace=True)
+            elif page == 'field-goals':
+                for col in df.columns:
+                    if not '-' in col:
+                        pass
+                    else:
+                        df4=pd.DataFrame()
+                        df4['Name']=df['Name']
+                        if col=='Made-Att':
+                            df4['Distance']='Total'
+                        else:
+                            df4['Distance']=col
+                        split_cols = df[col].str.split('-', expand=True)
+                        split_cols.columns=['Made','Att']
+                        for col in split_cols:
+                            if col==['MADE','ATT']:
+                                df4['Category']='Total'
+                            else:
+                                df4['Category']=col
+                            df4['Value']=split_cols[col]
+                            df3=pd.concat([df3,df4],ignore_index=True)
+                df=df3.sort_values(by=['Name','Distance'])
 
-        elif page == 'field-goals':
-            split_cols = df['Made-Att'].str.split('-', expand=True)
-            split_cols.columns = ['Made', 'ATT']
-            df = pd.concat([df, split_cols], axis=1)
-            cols = df.columns.tolist()
-            for col in ['Made', 'ATT']:
-                cols.remove(col)
-            insert_at = cols.index('Made-Att') + 1
-            for i, col in enumerate(['Made', 'ATT']):
-                cols.insert(insert_at + i, col)
-            df = df[cols]
-            df.drop(columns='Made-Att', inplace=True)
-        for col in df.columns.tolist():
             try:
-                df[col]=pd.to_numeric(df[col],downcast='integer')
-            except (ValueError,TypeError):
-                print(f'Warning: {col} contains non-numeric values and has been skipped.')
-                pass 
-        try:
-            with pd.ExcelWriter('SeasonStats.xlsx',mode='a',if_sheet_exists='replace') as writer:
                 df.to_excel(writer,sheet_name=page,index=False)
-        except FileNotFoundError:
-            df.to_excel('SeasonStats.xlsx',index=False,sheet_name=page)
-        all_results = []
-        print(f'Page generated for {page}')
+            except FileNotFoundError:
+                df.to_excel('SeasonStats.xlsx',index=False,sheet_name=page)
+            all_results = []
 
     driver.quit()
