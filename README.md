@@ -63,6 +63,9 @@ The components of the code are as follows:
   
      Cleaning:
      Certain columns (e.g., FUM-Lst) contain dashes and are treated as strings. These are split into two columns (e.g., FUM and LST) to allow numeric operations. Similar logic applies to columns like C-A-I in the passing         page. Cleaning rules are applied conditionally based on the stat category.
+
+     Pivoting:
+     The field goals table is pivoted to ensure the ability to compare kickers based on total performance and filter for specific distances.
      
      Type Conversion:
      The script attempts to convert all columns to numeric types—integers when possible, floats otherwise—skipping over non-numeric columns like player names.
