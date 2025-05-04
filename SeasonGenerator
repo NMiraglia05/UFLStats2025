@@ -68,8 +68,8 @@ def SeasonStats():
     ]
 
     pages = [
-        'passing', 'rushing', 'receiving', 'defense',
-        'field-goals', 'punt-returns', 'kick-returns'
+        #'passing', 'rushing', 'receiving', 'defense',
+        'field-goals',# 'punt-returns', 'kick-returns'
     ]
 
     baseurl = 'https://www.theufl.com/teams/'
@@ -123,26 +123,28 @@ def SeasonStats():
                 df.drop(columns='TFL - Yds', inplace=True)
 
             elif page == 'field-goals':
+                newcolumns=['Name','Distance','Category','Value']
+                df=pd.DataFrame(df)
+                df1=pd.DataFrame(columns=newcolumns)
                 for col in df.columns:
                     if not '-' in col:
                         pass
                     else:
-                        df4=pd.DataFrame()
-                        df4['Name']=df['Name']
+                        df2=pd.DataFrame(columns=newcolumns)
+                        df2['Name']=df['Name']
                         if col=='Made-Att':
-                            df4['Distance']='Total'
+                            distance='Total'
                         else:
-                            df4['Distance']=col
+                            distance=col
+                        df2['Distance']=distance
                         split_cols = df[col].str.split('-', expand=True)
                         split_cols.columns=['Made','Att']
-                        for col in split_cols:
-                            if col==['MADE','ATT']:
-                                df4['Category']='Total'
-                            else:
-                                df4['Category']=col
-                            df4['Value']=split_cols[col]
-                            df3=pd.concat([df3,df4],ignore_index=True)
-                df=df3.sort_values(by=['Name','Distance'])
+                        print(split_cols)
+                        for subcol in split_cols:
+                            df2['Category']=subcol
+                            df2['Value']=split_cols[subcol]
+                            df1 = pd.concat([df1, df2], ignore_index=True)
+                df1=df
 
             try:
                 df.to_excel(writer,sheet_name=page,index=False)
@@ -151,3 +153,5 @@ def SeasonStats():
             all_results = []
 
     driver.quit()
+
+print()
