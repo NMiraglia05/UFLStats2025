@@ -95,7 +95,9 @@ def SeasonStats():
     statsurl = '/stats/individual?stats-category='
     all_results = []
 
-    with pd.ExcelWriter('C:\\Users\\miragn\\Python\\UFL\\SeasonStats.xlsx',mode='a',if_sheet_exists='replace') as writer:
+    path= #insert desired file here
+    
+    with pd.ExcelWriter(path,mode='a',if_sheet_exists='replace') as writer:
         for page in pages:
             headers = []
             for team in teams:
