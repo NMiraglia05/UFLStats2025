@@ -61,6 +61,25 @@ def SeasonStats():
 
         return []
 
+    def cleandf(df):
+        df=pd.DataFrame(df)
+        dropcolumns=['#']
+        for col in dropcolumns:
+            try:
+                df=df.drop(columns=col,axis=1)
+            except KeyError:
+                pass
+        return df
+    
+    def convertdf(df):
+        df=pd.DataFrame(df)
+        for col in df.columns:
+            try:
+                df=pd.to_numeric(col,errors='raise')
+            except (ValueError,TypeError):
+                pass
+        return df
+
 
     teams = [
         'arlington', 'birmingham', 'dc', 'houston',
@@ -69,7 +88,7 @@ def SeasonStats():
 
     pages = [
         #'passing', 'rushing', 'receiving', 'defense',
-        'field-goals',# 'punt-returns', 'kick-returns'
+        'field-goals', #'punt-returns', 'kick-returns'
     ]
 
     baseurl = 'https://www.theufl.com/teams/'
@@ -91,6 +110,9 @@ def SeasonStats():
                     pass
 
             df = pd.DataFrame(all_results, columns=headers)
+
+            df=cleandf(df)
+
             if page in ['passing', 'rushing', 'receiving']:
                 split_cols = df['FUM-LST'].str.split('-', expand=True)
                 split_cols.columns = ['Fum', 'Lst']
@@ -139,12 +161,14 @@ def SeasonStats():
                         df2['Distance']=distance
                         split_cols = df[col].str.split('-', expand=True)
                         split_cols.columns=['Made','Att']
-                        print(split_cols)
                         for subcol in split_cols:
                             df2['Category']=subcol
                             df2['Value']=split_cols[subcol]
                             df1 = pd.concat([df1, df2], ignore_index=True)
-                df1=df
+            
+                df=df1
+
+            df=convertdf(df)
 
             try:
                 df.to_excel(writer,sheet_name=page,index=False)
@@ -153,5 +177,3 @@ def SeasonStats():
             all_results = []
 
     driver.quit()
-
-print()
