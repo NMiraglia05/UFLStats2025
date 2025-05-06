@@ -87,8 +87,8 @@ def SeasonStats():
     ]
 
     pages = [
-        #'passing', 'rushing', 'receiving', 'defense',
-        'field-goals', #'punt-returns', 'kick-returns'
+        'passing', 'rushing', 'receiving', 'defense',
+        'field-goals', 'punt-returns', 'kick-returns'
     ]
 
     baseurl = 'https://www.theufl.com/teams/'
