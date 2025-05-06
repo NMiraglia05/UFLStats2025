@@ -9,7 +9,7 @@ def week():
         (datetime.datetime(2025, 5, 26), datetime.datetime(2025, 6, 1)): 10
     }
 
-    date=datetime.datetime(2025,4,29)
+    date=datetime.datetime.today()
 
     for(start,end), week_number in weeks.items():
         if start <= date <= end:
