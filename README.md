@@ -62,17 +62,17 @@ The components of the code are as follows:
   Transformation
   
      Cleaning:
-     Certain columns (e.g., FUM-Lst) contain dashes and are treated as strings. These are split into two columns (e.g., FUM and LST) to allow numeric operations. Similar logic applies to columns like C-A-I in the passing         page. Cleaning rules are applied conditionally based on the stat category.
+     Certain columns (e.g., FUM-Lst) contain dashes and are treated as strings by default- this needs to be changed so they are treated as integers. These are split into two columns (e.g., FUM and LST) to allow numeric operations. Similar logic applies to columns like C-A-I in the passing page. Cleaning rules are applied conditionally based on the stat category.
 
      Pivoting:
-     The field goals table is pivoted to ensure the ability to compare kickers based on total performance and filter for specific distances.
+     The field goals table is pivoted, ensuring more robust analysis can be performed. First, the Pct, GP, Name, Lng, and Blkd categories are skipped over- this is because the dashboard I am building does not use these, so it's better to cut them instead of work around them. The remaining columns are distance ranges, with the exception of Made-Att. These column names are pivoted to a new column named Distance, with Made-Att being transformed into 'Total' to fit the rest of the values in the column. Next, two rows for each distance range for each kicker is generated- one for kicks attempted, one for kicks made. This is accomplished by splitting the columns by the character - which results in two columns, which are contained within the list split_cols. These columns are then renamed to Made and Att. Since the loop iterates over every column and skips the columns that lack a -, this will apply to all columns that don't get skipped. At the very end of the loop, a nested loop occurrs that loops through every column in split_cols(always 2). df2 is used to track each entry for the new dataframe. Within the nested loop, each kicker's name is entered, then paired with the distance(set outside the loop), category(subcol), and value(the corresponding value in column subcol). Then, df2 is concatenated with df1. Since this process happens for each distance range, the end result is a table that tracks every kicker's performance at each distance.
      
      Type Conversion:
      The script attempts to convert all columns to numeric types—integers when possible, floats otherwise—skipping over non-numeric columns like player names.
   
   Loading
   
-     An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets       are replaced with updated data to keep the file current.
+     An ExcelWriter object is used to save each dataframe into SeasonStats.xlsx. If the file does not exist, it is created. The ExcelWriter ensures that each sheet is updated without overwriting the others. Existing sheets are replaced with updated data to keep the file current. While this does create a risk of data loss, this is countered by archiving the seasonstats page at the end of each week via StatController.
 
 ### WeekGenerator.py
   Generates a weekly Excel file capturing player performance for the current week.
